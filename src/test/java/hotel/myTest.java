@@ -64,6 +64,7 @@ class myTest {
     private static final DateTimeFormatter SHORT_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
     private static final DateTimeFormatter LONG_FORMATTER = DateTimeFormatter.ofPattern("yyyy年M月d日");
     private static WebDriver driver;
+    private static WebDriverWait wait;
 
     @BeforeAll
     static void initAll() {
@@ -158,6 +159,18 @@ class myTest {
                 () -> assertEquals("電話：00011112222", confirmPage.getContact()),
                 () -> assertEquals("なし", confirmPage.getComment())
         );
+
+        //　8. 「この内容で予約する」ボタンをタップする
+        confirmPage.doConfirm();
+
+        //　9. 「予約を完了しました」というポップアップメッセージが表示されているのを確認する 不会
+        assertEquals("ご来館、心よりお待ちしております。", confirmPage.getModalMessage());
+
+        //  10. 「閉じる」ボタンをタップする
+        confirmPage.close();
+
+        //  11. 「宿泊予約」スクリーンに戻るのを確認する　不会
+        assertTrue(wait.until(ExpectedConditions.numberOfWindowsToBe(1)));
 
     }
 }
