@@ -36,6 +36,12 @@ public class ReservePage {
     }
   }
 
+  public String getTotalBill() {
+    wait.until(ExpectedConditions.textMatches(By.id("total-bill"), Pattern.compile(".+")));
+    var totalBill = driver.findElement(By.id("total-bill"));
+    return totalBill.getText();
+  }
+
   public void setReserveDate(String date) {
     var dateInput = driver.findElement(By.id("date"));
     dateInput.clear();
