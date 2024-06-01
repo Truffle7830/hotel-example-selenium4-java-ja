@@ -144,5 +144,20 @@ class myTest {
                 () -> assertEquals("66,000円", reservePage.getTotalBill())
         );
 
+        //  6. 「予約を確認する」をタップする
+        var confirmPage = reservePage.goToConfirmPage();
+
+        //　7. 「宿泊予約確認」画面に前の画面に入力したデータが正しく表示されているのを確認する
+        assertAll("予約確認",
+                () -> assertEquals("合計 66,000円（税込み）", confirmPage.getTotalBill()),
+                () -> assertEquals("テーマパーク優待プラン", confirmPage.getPlanName()),
+                () -> assertEquals("2024年07月15日 〜 2024年07月18日 3泊", confirmPage.getTerm()),
+                () -> assertEquals("2名様", confirmPage.getHeadCount()),
+                () -> assertTrue(confirmPage.getPlans().contains("朝食バイキング")),
+                () -> assertEquals("山田一郎様", confirmPage.getUsername()),
+                () -> assertEquals("電話：00011112222", confirmPage.getContact()),
+                () -> assertEquals("なし", confirmPage.getComment())
+        );
+
     }
 }
