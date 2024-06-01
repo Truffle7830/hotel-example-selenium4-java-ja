@@ -5,14 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static hotel.Utils.getNewWindowHandle;
 import static hotel.Utils.sleep;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static hotel.Utils.BASE_URL;
-import static hotel.Utils.getNewWindowHandle;
-import static hotel.Utils.sleep;
-import static java.time.DayOfWeek.FRIDAY;
-import static java.time.DayOfWeek.SATURDAY;
-import static java.time.DayOfWeek.SUNDAY;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -27,58 +19,48 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.WebDriver;
 import hotel.pages.ReservePage;
-
-import java.time.LocalDate;
-
-import hotel.pages.ReservePage;
 import hotel.pages.ReservePage.Contact;
-import hotel.pages.RoomPage;
-import hotel.pages.TopPage;
 
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
-
 @TestMethodOrder(OrderAnnotation.class)
 @DisplayName("課題")
-class myTest {
+class MyTest {
 
     private static final DateTimeFormatter SHORT_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-    private static final DateTimeFormatter LONG_FORMATTER = DateTimeFormatter.ofPattern("yyyy年M月d日");
     private static WebDriver driver;
     private static WebDriverWait wait;
+    private String originalHandle;
 
     @BeforeAll
     static void initAll() {
         driver = Utils.createWebDriver();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+
+    @BeforeEach
+    void init() {
+        originalHandle = driver.getWindowHandle();
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (driver.getWindowHandles().size() > 1) {
+            driver.close();
+        }
+        driver.switchTo().window(originalHandle);
+        driver.manage().deleteAllCookies();
     }
 
     @AfterAll
     static void tearDownAll() {
         driver.quit();
-    }
-
-    @AfterEach
-    void tearDown() {
-        driver.manage().deleteAllCookies();
     }
 
     @Test
@@ -152,7 +134,7 @@ class myTest {
         assertAll("予約確認",
                 () -> assertEquals("合計 66,000円（税込み）", confirmPage.getTotalBill()),
                 () -> assertEquals("テーマパーク優待プラン", confirmPage.getPlanName()),
-                () -> assertEquals("2024年07月15日 〜 2024年07月18日 3泊", confirmPage.getTerm()),
+                () -> assertEquals("2024年7月15日 〜 2024年7月18日 3泊", confirmPage.getTerm()),
                 () -> assertEquals("2名様", confirmPage.getHeadCount()),
                 () -> assertTrue(confirmPage.getPlans().contains("朝食バイキング")),
                 () -> assertEquals("山田一郎様", confirmPage.getUsername()),
@@ -163,13 +145,13 @@ class myTest {
         //　8. 「この内容で予約する」ボタンをタップする
         confirmPage.doConfirm();
 
-        //　9. 「予約を完了しました」というポップアップメッセージが表示されているのを確認する 不会
+        //　9. 「予約を完了しました」というポップアップメッセージが表示されているのを確認する
         assertEquals("ご来館、心よりお待ちしております。", confirmPage.getModalMessage());
 
         //  10. 「閉じる」ボタンをタップする
         confirmPage.close();
 
-        //  11. 「宿泊予約」スクリーンに戻るのを確認する　不会
+        //  11. 「宿泊予約」スクリーンに戻るのを確認する
         assertTrue(wait.until(ExpectedConditions.numberOfWindowsToBe(1)));
 
     }
