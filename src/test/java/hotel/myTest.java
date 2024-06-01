@@ -1,33 +1,20 @@
 package hotel;
 
-import static hotel.Utils.BASE_URL;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static hotel.Utils.getNewWindowHandle;
-import static hotel.Utils.sleep;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import hotel.pages.TopPage;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.openqa.selenium.WebDriver;
 import hotel.pages.ReservePage;
 import hotel.pages.ReservePage.Contact;
-
-import java.time.LocalDate;
-import java.time.Duration;
-import java.time.format.DateTimeFormatter;
-
-import org.junit.jupiter.api.BeforeEach;
+import hotel.pages.TopPage;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static hotel.Utils.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(OrderAnnotation.class)
 @DisplayName("課題")
@@ -44,6 +31,11 @@ class MyTest {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
+    @AfterAll
+    static void tearDownAll() {
+        driver.quit();
+    }
+
     @BeforeEach
     void init() {
         originalHandle = driver.getWindowHandle();
@@ -56,11 +48,6 @@ class MyTest {
         }
         driver.switchTo().window(originalHandle);
         driver.manage().deleteAllCookies();
-    }
-
-    @AfterAll
-    static void tearDownAll() {
-        driver.quit();
     }
 
     @Test
