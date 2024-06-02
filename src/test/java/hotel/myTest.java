@@ -53,7 +53,7 @@ class MyTest {
     @Test
     @Order(1)
     @DisplayName("課題1")
-    void testCase1() {
+    void testCase() {
         driver.get(BASE_URL);
         var topPage = new TopPage(driver);
 
@@ -146,7 +146,7 @@ class MyTest {
     @Test
     @Order(2)
     @DisplayName("課題2 エラーケース1")
-    void testCase2() {
+    void errorCase1() {
         //  メールアドレスで不正なメールアドレスでエラーとなること
         driver.get(BASE_URL);
         var topPage = new TopPage(driver);
@@ -172,7 +172,7 @@ class MyTest {
     @Test
     @Order(3)
     @DisplayName("課題2 エラーケース2")
-    void testCase3() {
+    void errorCase2() {
         //  電話で不正な電話番号でエラーとなること
         driver.get(BASE_URL);
         var topPage = new TopPage(driver);
